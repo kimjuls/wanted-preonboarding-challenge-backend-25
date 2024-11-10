@@ -25,6 +25,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentService implements PaymentFullfillUseCase {
+    public int fee = 100;
     private final Set<PaymentAPIs> paymentAPIsSet;
     private final Set<TransactionTypeRepository> transactionTypeRepositorySet;
     private final OrderRepository orderRepository;
@@ -32,6 +33,7 @@ public class PaymentService implements PaymentFullfillUseCase {
 
     private final Map<String, TransactionTypeRepository> transactionTypeRepositories = new HashMap<>();
     private final Map<String, PaymentAPIs> pgAPIs = new HashMap<>();
+    public PaymentAPIs paymentAPIs;
 
     @PostConstruct
     public void init() {
@@ -50,7 +52,8 @@ public class PaymentService implements PaymentFullfillUseCase {
     @Override
     public String paymentApproved(ReqPaymentApprove requestMessage) throws IOException {
         verifyOrderIsCompleted(requestMessage.getOrderId());
-        PaymentAPIs paymentAPIs = selectPgAPI(requestMessage.getSelectedPgCorp());
+//        final PaymentAPIs paymentAPIs = selectPgAPI(requestMessage.getSelectedPgCorp());
+        paymentAPIs = selectPgAPI(requestMessage.getSelectedPgCorp());
         PaymentApproveResponse response = paymentAPIs.requestPaymentApprove(requestMessage);
 
         if (paymentAPIs.isPaymentApproved(response.getStatus().name())) {
@@ -68,12 +71,6 @@ public class PaymentService implements PaymentFullfillUseCase {
         return paymentLedgerRepository.findOneByTransactionIdDesc(paymentKey);
     }
 
-    private void verifyOrderIsCompleted(String orderId) throws IllegalArgumentException {
-        OrderStatus status = orderRepository.findById(orderId).getStatus();
-        if (!status.equals(OrderStatus.ORDER_COMPLETED))
-            throw new IllegalArgumentException("Order is not completed || Order is already paymented");
-    }
-
     public PaymentAPIs selectPgAPI(PgCorp pgCorp) {
         return switch (pgCorp.name().toUpperCase()) {
             case "TOSS" -> pgAPIs.get("TOSS");
@@ -81,5 +78,10 @@ public class PaymentService implements PaymentFullfillUseCase {
         };
     }
 
+    private void verifyOrderIsCompleted(String orderId) throws IllegalArgumentException {
+        OrderStatus status = orderRepository.findById(orderId).getStatus();
+        if (!status.equals(OrderStatus.ORDER_COMPLETED))
+            throw new IllegalArgumentException("Order is not completed || Order is already paymented");
+    }
 
 }
