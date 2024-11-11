@@ -50,6 +50,10 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+    // ArchUnit
+    implementation("com.tngtech.archunit:archunit:1.3.0")
+    testImplementation("com.tngtech.archunit:archunit-junit5:1.3.0")
+
     // mapstruct 설정
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")

@@ -1,5 +1,6 @@
 package com.wanted.clone.oneport.payments.presentation.web;
 
+import com.wanted.clone.oneport.payments.application.port.out.repository.OrderRepository;
 import com.wanted.clone.oneport.payments.presentation.port.in.CreateNewOrderUseCase;
 import com.wanted.clone.oneport.payments.presentation.web.request.order.PurchaseOrder;
 import com.wanted.clone.oneport.payments.presentation.web.request.order.ReqNewOrder;
@@ -17,6 +18,7 @@ import java.util.*;
 @Slf4j
 public class OrderController {
     private final CreateNewOrderUseCase createNewOrderUseCase;
+//    private final OrderRepository orderRepository;
 
     @PostMapping("/new")
     public RespNewPurchaseOrderMessage newOrder(@RequestBody @Valid PurchaseOrder newOrder) throws Exception {
