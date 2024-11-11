@@ -51,15 +51,16 @@ public class PaymentService implements PaymentFullfillUseCase {
     @Transactional
     @Override
     public String paymentApproved(ReqPaymentApprove requestMessage) throws IOException {
-        verifyOrderIsCompleted(requestMessage.getOrderId());
+        String orderId = requestMessage.getOrderId();
+        verifyOrderIsCompleted(orderId);
 //        final PaymentAPIs paymentAPIs = selectPgAPI(requestMessage.getSelectedPgCorp());
         paymentAPIs = selectPgAPI(requestMessage.getSelectedPgCorp());
         PaymentApproveResponse response = paymentAPIs.requestPaymentApprove(requestMessage);
 
         if (paymentAPIs.isPaymentApproved(response.getStatus().name())) {
-            Order completedOrder = orderRepository.findById(response.getOrderId());
+            Order completedOrder = orderRepository.findById(orderId);
             completedOrder.orderPaymentFullFill(response.getTransactionId());
-            paymentLedgerRepository.save(response.toEntity());
+            paymentLedgerRepository.save(response.toEntity(requestMessage.getSelectedPgCorp()));
 
             return "success";
         }
@@ -72,8 +73,8 @@ public class PaymentService implements PaymentFullfillUseCase {
     }
 
     public PaymentAPIs selectPgAPI(PgCorp pgCorp) {
-        return switch (pgCorp.name().toUpperCase()) {
-            case "TOSS" -> pgAPIs.get("TOSS");
+        return switch (pgCorp.name().toLowerCase()) {
+            case "toss" -> pgAPIs.get("toss");
             default -> throw new IllegalArgumentException("Invalid pgCorp name: " + pgCorp.name());
         };
     }

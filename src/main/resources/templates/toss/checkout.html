@@ -59,8 +59,9 @@ http://localhost:8080/payment/checkout.html?orderId=0f568795-0678-41f0-a385-11d6
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get("orderId"); // 주문ID
     const ordererName = urlParams.get("userId");
+    console.log(ordererName);
     const ordererPhoneNumber = urlParams.get("ordererPhoneNumber");
-    const orderedProductsName = urlParams.get("orderName"); // 주문된 상품명
+    const orderedProductsName = urlParams.get("productName"); // 주문된 상품명
     const amount = urlParams.get("amount"); // 결제 금액
 
     const button = document.getElementById("payment-button");
@@ -74,8 +75,8 @@ http://localhost:8080/payment/checkout.html?orderId=0f568795-0678-41f0-a385-11d6
     // @docs https://docs.tosspayments.com/reference/widget-sdk#sdk-설치-및-초기화
     // const widgetClientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
     const widgetClientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-    // const customerKey = urlParams.get("userId");
-    const customerKey = [[${userId}]];
+    const customerKey = urlParams.get("userId");
+    // const customerKey = [[${userId}]];
     const paymentWidget = PaymentWidget(widgetClientKey, customerKey); // 회원 결제
     // const paymentWidget = PaymentWidget(widgetClientKey, PaymentWidget.ANONYMOUS); // 비회원 결제
 
@@ -111,11 +112,12 @@ http://localhost:8080/payment/checkout.html?orderId=0f568795-0678-41f0-a385-11d6
         paymentWidget.requestPayment({
             orderId: orderId, // 주문ID
             orderName: orderedProductsName, // 주문된 상품명
-            successUrl: window.location.origin + "/success",
+            successUrl: window.location.origin + "/payment/success",
             failUrl: window.location.origin + "/fail",
-            customerEmail: "fastcamp-y@gmail.com",
+            customerEmail: "wanted-backend@gmail.com",
             customerName: ordererName,
             customerMobilePhone: ordererPhoneNumber,
+            pgCorpName: 'toss'
         });
     });
 </script>

@@ -24,7 +24,8 @@ public class TossPayment implements PaymentAPIs {
 
     @Override
     public PaymentApproveResponse requestPaymentApprove(ReqPaymentApprove requestMessage) throws IOException {
-        Response<TossApproveResponseMessage> response = tossClient.paymentFullfill(TossApproveMessage.from(requestMessage)).execute();
+        TossApproveMessage message = TossApproveMessage.from(requestMessage);
+        Response<TossApproveResponseMessage> response = tossClient.paymentFullfill(message).execute();
         if (response.isSuccessful())
             return Objects.requireNonNull(response.body())
                     .toCommonMessage();

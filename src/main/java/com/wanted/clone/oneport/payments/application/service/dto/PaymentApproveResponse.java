@@ -4,6 +4,7 @@ import com.wanted.clone.oneport.payments.domain.entity.payment.PaymentLedger;
 import com.wanted.clone.oneport.payments.domain.entity.payment.PaymentMethod;
 import com.wanted.clone.oneport.payments.domain.entity.payment.PaymentStatus;
 import com.wanted.clone.oneport.payments.infrastructure.pg.toss.response.payment.method.Card;
+import com.wanted.clone.oneport.payments.presentation.web.request.payment.PgCorp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,15 +26,16 @@ public class PaymentApproveResponse {
     private String requestedAt; // 2024-06-18T15:13:15+09:00
     private String approvedAt;
 
-    public PaymentLedger toEntity() {
+    public PaymentLedger toEntity(PgCorp corp) {
         return PaymentLedger.builder()
-                .transactionId(this.transactionId)
-                .method(this.getMethod())
-                .paymentStatus(this.getStatus())
-                .totalAmount(this.getTotalAmount())
-                .balanceAmount(this.getBalanceAmount())
-                .canceledAmount(0)
-                .build();
+            .transactionId(this.transactionId)
+            .method(this.getMethod())
+            .paymentStatus(this.getStatus())
+            .totalAmount(this.getTotalAmount())
+            .balanceAmount(this.getBalanceAmount())
+            .canceledAmount(0)
+            .pgCorpName(corp)
+            .build();
     }
-    
+
 }

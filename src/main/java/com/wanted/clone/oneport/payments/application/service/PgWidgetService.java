@@ -20,7 +20,7 @@ public class PgWidgetService implements PgWidgetUseCase {
     @PostConstruct
     public void init() {
         pgWidgets.forEach(pgWidget -> {
-            String originalPgName = pgWidget.getClass().getSimpleName().split("Widget")[0];
+            String originalPgName = pgWidget.getClass().getSimpleName().split("Widget")[0].toLowerCase();
             pgWidgetSelector.put(originalPgName, pgWidget);
         });
     }

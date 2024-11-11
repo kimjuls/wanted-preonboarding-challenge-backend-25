@@ -4,12 +4,13 @@ import com.wanted.clone.oneport.payments.infrastructure.pg.CommonApproveMessage;
 import com.wanted.clone.oneport.payments.presentation.web.request.payment.ReqPaymentApprove;
 import lombok.*;
 
+@Getter
 @Builder
 @RequiredArgsConstructor
 public class TossApproveMessage extends CommonApproveMessage {
     private final String paymentKey;
     private final String orderId;
-    private final int totalAmount;
+    private final int amount;
 
 //    @Builder
 //    private TossApproveMessage(String paymentKey, String orderId, int totalAmount) {
@@ -22,7 +23,7 @@ public class TossApproveMessage extends CommonApproveMessage {
     public String toString() {
         return "PaymentApproveMessage [payment_key=" + paymentKey +
                 ", order_id=" + orderId +
-                ", total_amount=" + totalAmount +
+                ", total_amount=" + amount +
                 "]";
     }
 
@@ -30,7 +31,7 @@ public class TossApproveMessage extends CommonApproveMessage {
         return TossApproveMessage.builder()
                 .paymentKey(requestMessage.getPaymentKey())
                 .orderId(requestMessage.getOrderId())
-                .totalAmount(requestMessage.getTotalAmount())
+                .amount(requestMessage.getTotalAmount())
                 .build();
     }
 }

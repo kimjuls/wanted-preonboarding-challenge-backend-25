@@ -13,12 +13,15 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 public class ArchTests {
     @Test
     public void controller_mustHaveAboutControllerAnnotation_rule() {
+        // ArchUnit 동작 원리는 검증 대상 Classes 패키지 단위로 ArchUnit 내부에 Import 후에 지정한 검증을 수행 한다.
+        // 따라서 우리가 검증 하려는 소스 코드(클래스)가 포함된 Package를 Import 해야 한다.
         JavaClasses classes = new ClassFileImporter().importPackages("com.wanted.clone.oneport");
+        // 검증 내용 작성
         ArchRule rule = classes().that().resideInAPackage("..presentation.web")
                 .should().beAnnotatedWith(RestController.class)
                 .orShould().beAnnotatedWith(Controller.class)
                 .orShould().haveSimpleNameContaining("Controller");
-
+        // 작성된 내용 검증 실행
         rule.check(classes);
     }
 
