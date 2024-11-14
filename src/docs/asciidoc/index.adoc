@@ -1,0 +1,13 @@
+= Title
+
+== Order API
+
+=== New Order
+- http request
+include::/Users/black/IdeaProjects/wanted-preonboarding-challenge-backend-25/build/generated-snippets/CorrectRequestMessage/curl-request.adoc[]
+
+- http response
+include::/Users/black/IdeaProjects/wanted-preonboarding-challenge-backend-25/build/generated-snippets/CorrectRequestMessage/http-response.adoc[]
+
+- response body
+include::/Users/black/IdeaProjects/wanted-preonboarding-challenge-backend-25/build/generated-snippets/CorrectRequestMessage/response-body.adoc[]

@@ -22,38 +22,4 @@ public class PurchaseOrder {
     @Size(min = 1)
     private List<PurchaseOrderItem> newlyOrderedItem;
 
-    public List<OrderItem> convert2OrderItems(Order o) {
-        return newlyOrderedItem.stream()
-                .map(items -> convert2OrderItem(items, o))
-                .toList();
-    }
-
-    private OrderItem convert2OrderItem(PurchaseOrderItem item, Order o) {
-        return OrderItem.builder()
-                .order(o)
-                .id(new PurchaseOrderId(o.getOrderId(), item.getItemIdx()))
-                .productId(item.getProductId())
-                .productName(item.getProductName())
-                .price(item.getPrice())
-                .quantity(item.getQuantity())
-                .size("FREE")
-                .state(OrderStatus.ORDER_COMPLETED)
-                .build();
-    }
-
-    public Order toEntity() throws Exception {
-        Order o = Order.builder()
-                .orderId(IdGenerator.generateId(14))
-                .items(new ArrayList<>())
-                .name(this.getOrderer().getName())
-                .phoneNumber(this.getOrderer().getPhoneNumber())
-                .build();
-
-        o.getItems().addAll(this.convert2OrderItems(o));
-        if (Order.verifyHaveAtLeastOneItem(o.getItems())) throw new Exception("Noting Items");
-        o.calculateTotalAmount();
-        return o;
-    }
-
-
 }

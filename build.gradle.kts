@@ -1,10 +1,14 @@
-import io.spring.gradle.dependencymanagement.org.codehaus.plexus.util.StringUtils.clean
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
 
 plugins {
     java
-    id("org.springframework.boot") version "3.3.5-SNAPSHOT"
+    id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.6"
     id("com.google.protobuf") version "0.9.4"
+    id("org.asciidoctor.jvm.convert") version "3.3.2"
+    id("com.epages.restdocs-api-spec") version "0.17.1"
+    id("org.hidetake.swagger.generator") version "2.18.2"
+
 }
 
 group = "com.wanted.clone"
@@ -12,18 +16,19 @@ version = "0.0.1-SNAPSHOT"
 val protobufVersion = "4.27.2"
 val protobufPluginVersion = "0.9.4"
 val grpcVersion = "1.65.1"
+val asciidoctorExt: Configuration by configurations.creating
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
+    sourceCompatibility = JavaVersion.VERSION_21
 }
 
 configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
     }
+    asciidoctorExt
 }
+
 
 repositories {
     mavenCentral()
@@ -34,6 +39,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
     compileOnly("org.projectlombok:lombok")
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
@@ -43,16 +51,28 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.10.0")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0")
     implementation("com.google.code.gson:gson")
-//    implementation("com.fasterxml.jackson.core:jackson-core:2.13.2")
 //    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    runtimeOnly("com.h2database:h2")
     runtimeOnly("com.mysql:mysql-connector-j")
     annotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // ArchUnit
     implementation("com.tngtech.archunit:archunit:1.3.0")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.3.0")
+
+    // JUnit
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-actuator")
+
+    // Test
+    // 3. RestDoc Implementation
+    testImplementation("com.epages:restdocs-api-spec-mockmvc:0.17.1")
+    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testImplementation("com.squareup.okhttp3:mockwebserver")
+    // Swagger UI
+//    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
     // mapstruct 설정
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
@@ -68,6 +88,7 @@ dependencies {
     implementation("io.grpc:grpc-protobuf:${grpcVersion}")     // Protobuf 메시지와 gRPC의 통합을 지원
     implementation("io.grpc:grpc-stub:${grpcVersion}")         // gRPC 클라이언트 스텁을 생성
     compileOnly("org.apache.tomcat:annotations-api:6.0.53")    // 이걸 추가해야 gRPC 컴파일시 javax 어노테이션 오류가 발생하지 않는다.
+
 }
 
 tasks.withType<Test> {
@@ -93,4 +114,21 @@ protobuf {
             }
         }
     }
+}
+
+openapi3 {
+    this.setServer("https://localhost:8080") // list로 넣을 수 있어 각종 환경의 URL들을 넣을 수 있음!
+    title = "Wanted PreOnboarding Backend"
+    description = "One-Port-Service"
+    version = "1.0.0"
+    format = "yaml" // or json
+}
+
+val snippetsDir by extra { file("build/generated-snippets") } // #3
+
+tasks.register<Copy>("copyOasToSwagger") {
+    delete("src/main/resources/static/swagger-ui/openapi3.yaml") // 기존 yaml 파일 삭제
+    from("$buildDir/api-spec/openapi3.yaml") // 복제할 yaml 파일 타겟팅
+    into("src/main/resources/static/swagger-ui/.") // 타겟 디렉토리로 파일 복제
+    dependsOn("openapi3") // openapi3 task가 먼저 실행되도록 설정
 }

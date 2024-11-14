@@ -19,7 +19,7 @@ public class PaymentController {
     private final PgWidgetUseCase pgWidgetUseCase;
     private final PaymentFullfillUseCase paymentFullfillUseCase;
 
-    // http://localhost:8080/payment/checkout?orderId=20241111688566&ordererName=%EC%9C%A0%EC%A7%84%ED%98%B8&ordererPhoneNumber=01012341234&userId=jinho123&amount=13400&productName=%EC%86%8D%EC%9D%B4%ED%8E%B8%ED%95%9C%EC%9A%B0%EC%9C%A0%EC%99%B81&pgCorpName=toss
+    // http://localhost:8080/payment/checkout?orderId=20241112115994&ordererName=%EC%9C%A0%EC%A7%84%ED%98%B8&ordererPhoneNumber=01012341234&userId=jinho123&amount=13400&productName=%EC%86%8D%EC%9D%B4%ED%8E%B8%ED%95%9C%EC%9A%B0%EC%9C%A0%EC%99%B81&pgCorpName=toss
     @GetMapping("checkout")
     public String paymentCheckout(@RequestParam(value = "orderId") String orderId,
                                   @RequestParam(value = "ordererName") String ordererName,

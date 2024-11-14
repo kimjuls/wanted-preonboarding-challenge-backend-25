@@ -11,7 +11,7 @@ import lombok.Getter;
 public class ReqPaymentApprove {
     private String siteCode;
     private PgCorp selectedPgCorp;
-    private String paymentKey;
+    private String paymentKey; // transaction key tno
     private String orderId;
     private int totalAmount;
 
