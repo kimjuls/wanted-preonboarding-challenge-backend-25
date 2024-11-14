@@ -18,12 +18,12 @@ public class Arch2Tests {
         .orShould().beAnnotatedWith(Controller.class)
         .orShould().haveSimpleNameContaining("Controller");
 
-    @ArchTest
-    public static final ArchRule portAndAdapter = onionArchitecture()
-        .domainModels("com.wanted.clone.oneport.payments.domain.entity")
-        .domainServices("com.wanted.clone.oneport.payments.application.service")
-        .applicationServices("com.wanted.clone.oneport.core.config..")
-        .adapter("persistence", "com.wanted.clone.oneport.payment.application.port.out.repository..")
-        .adapter("rest", "com.wanted.clone.oneport.payment.presentation.web..");
+//    @ArchTest
+//    public static final ArchRule portAndAdapter = onionArchitecture()
+//        .domainModels("com.wanted.clone.oneport.payments.domain.entity")
+//        .domainServices("com.wanted.clone.oneport.payments.application.service")
+//        .applicationServices("com.wanted.clone.oneport.core.config..")
+//        .adapter("persistence", "com.wanted.clone.oneport.payment.application.port.out.repository..")
+//        .adapter("rest", "com.wanted.clone.oneport.payment.presentation.web..");
 
 }

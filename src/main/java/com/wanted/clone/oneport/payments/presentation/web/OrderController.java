@@ -21,7 +21,7 @@ public class OrderController {
 //    private final OrderRepository orderRepository;
 
     @PostMapping("/new")
-    public RespNewPurchaseOrderMessage newOrder(@RequestBody @Valid PurchaseOrder newOrder) throws Exception {
+    public RespNewPurchaseOrderMessage newOrder(@RequestBody @Valid ReqNewOrder newOrder) throws Exception {
         return RespNewPurchaseOrderMessage.from(createNewOrderUseCase.createOrder(newOrder));
     }
 

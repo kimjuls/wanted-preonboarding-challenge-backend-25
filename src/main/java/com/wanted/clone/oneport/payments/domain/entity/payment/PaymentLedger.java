@@ -5,12 +5,10 @@ import com.wanted.clone.oneport.payments.domain.entity.payment.converter.Payment
 import com.wanted.clone.oneport.payments.domain.entity.payment.converter.PgCorpConverter;
 import com.wanted.clone.oneport.payments.presentation.web.request.payment.PgCorp;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
-@Table(name = "payment_transaction")
+@Table(name = "payment_ledger")
 @Builder
 @Getter
 @AllArgsConstructor
